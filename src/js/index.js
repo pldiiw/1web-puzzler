@@ -19,4 +19,24 @@ function addDropStops (element) {
   });
 }
 
-const scoreboardList = document.querySelector('#scoreboard ol');
+const scoreboardOl = document.querySelector('#scoreboard ol');
+const scores = [10, 20, 5, 7, 30];
+const sortedScores = scores.sort((a, b) => a - b);
+const firstScores = sortedScores.slice(0, 3);
+firstScores.forEach(v => {
+  const li = document.createElement('li');
+  li.innerText = v;
+  scoreboardOl.append(li);
+});
+
+const chrono = document.querySelector('#chrono');
+let now = window.performance.now();
+let before = now;
+timer();
+
+function timer () {
+  before = now;
+  now = window.performance.now();
+  chrono.innerText = (now / 1000).toLocaleString('fr-FR', { maximumFractionDigits: 2 });
+  window.requestAnimationFrame(timer);
+}

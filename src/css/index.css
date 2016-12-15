@@ -1,7 +1,7 @@
-* {
+/* * {
   margin: 0;
   padding: 0;
-}
+} */
 
 html, body {
   width: 100%;
@@ -52,4 +52,18 @@ h1 {
 
 .ma1 {
   margin: .25rem;
+}
+
+#game-info > div {
+  display: inline-block;
+  width: 30%;
+}
+
+#game-info {
+  text-align: center;
+}
+
+ol {
+  text-align: left;
+  padding-left: 40%;
 }
