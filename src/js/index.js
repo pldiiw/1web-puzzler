@@ -41,3 +41,16 @@ function timer () {
     { minimumFractionDigits: 2, maximumFractionDigits: 2 });
   window.requestAnimationFrame(timer);
 }
+
+Array.prototype.forEach.call(
+  document.querySelectorAll('#puzzle-resolved .drop-stop'),
+  (v, i) => {
+    const piece = document.createElement('div');
+    piece.classList.add('w30', 'h30');
+    piece.style.backgroundImage =
+      'url("https://mir-s3-cdn-cf.behance.net/project_modules/max_1200/06b68438623767.577cbf5c96aa4.jpg") ';
+    piece.style.backgroundPosition =
+      (30 * (i % puzzleSize))+ 'px ' + (30 * Math.floor(i/puzzleSize))+ 'px';
+    v.append(piece);
+  }
+);
