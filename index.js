@@ -40,11 +40,11 @@ function mover (baseEvent) {
   };
 }
 
-// .drop-stop-sensitive
-const dropStopSensitives = document.querySelectorAll('.drop-stop-sensitive');
-Array.prototype.forEach.call(dropStopSensitives, makeStopSensitive);
+// .draggable--drop-anchor-sensitive
+const dropAnchorSensitives = document.querySelectorAll('.draggable--drop-anchor-sensitive');
+Array.prototype.forEach.call(dropAnchorSensitives, makeAnchorSensitive);
 
-function makeStopSensitive (element) {
+function makeAnchorSensitive (element) {
   const bound = bounder(element);
   document.addEventListener('mouseup', bound);
 }
@@ -52,16 +52,16 @@ function makeStopSensitive (element) {
 function bounder (element) {
   return function (event) {
     if (element.classList.contains('dragging')) {
-      const dropStops = document.querySelectorAll('.drop-stop');
-      const availableDropStops = Array.prototype.filter.call(dropStops,
+      const dropAnchors = document.querySelectorAll('.drop-anchor');
+      const availableDropAnchors = Array.prototype.filter.call(dropAnchors,
         v => v.childElementCount === 0
       );
-      Array.prototype.forEach.call(availableDropStops,
-        (dropStop) => {
-          const dropStopBoundaries = dropStop.getBoundingClientRect();
+      Array.prototype.forEach.call(availableDropAnchors,
+        (dropAnchor) => {
+          const dropAnchorBoundaries = dropAnchor.getBoundingClientRect();
 
-          if (isXYInsideRect(event.clientX, event.clientY, dropStopBoundaries)) {
-            dropStop.appendChild(element);
+          if (isXYInsideRect(event.clientX, event.clientY, dropAnchorBoundaries)) {
+            dropAnchor.appendChild(element);
             element.style.top = '0px';
             element.style.left = '0px';
           }
@@ -74,11 +74,11 @@ function isXYInsideRect (x, y, rect) {
   return y > rect.top && y < rect.bottom && x > rect.left && x < rect.right;
 }
 
-// .drop-stop-exclusive
-const dropStopExclusives = document.querySelectorAll('.drop-stop-exclusive');
-Array.prototype.forEach.call(dropStopExclusives, makeStopExclusive);
+// .draggable--drop-anchor-exclusive
+const dropAnchorExclusives = document.querySelectorAll('.draggable--drop-anchor-exclusive');
+Array.prototype.forEach.call(dropAnchorExclusives, makeAnchorExclusive);
 
-function makeStopExclusive (element) {
+function makeAnchorExclusive (element) {
   const bound = bounder(element);
   document.addEventListener('mouseup', (event) => {
     bound(event);
