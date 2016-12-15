@@ -7,7 +7,15 @@
   <link rel="stylesheet" href="index.css">
 </head>
 <body>
-  <div class="draggable bg-red w50 h50 pos-a"></div>
+  <div class="drop-stop w50 h50 ba b--dashed">
+    <div class="draggable drop-stop-exclusive bg-red w50 h50 pos-r"></div>
+  </div>
+  <div class="drop-stop w50 h50 ba b--dashed dib">
+  </div>
+  <div class="drop-stop w50 h50 ba b--dashed">
+    <div class="draggable drop-stop-sensitive bg-red w50 h50 pos-r"></div>
+  </div>
+  <div class="drop-stop max-draggables--1 w50 h50 ba b--dashed dib"></div>
 
   <script src="index.js"></script>
 </body>

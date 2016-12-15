@@ -13,3 +13,20 @@
 .pos-a {
   position: absolute;
 }
+
+.ba {
+  border-style: solid;
+  border-width: 1px;
+}
+
+.b--dashed {
+  border-style: dashed;
+}
+
+.pos-r {
+  position: relative;
+}
+
+.dib {
+  display: inline-block;
+}

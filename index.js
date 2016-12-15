@@ -1,5 +1,6 @@
 'use strict';
 
+// .draggable
 const draggables = document.querySelectorAll('.draggable');
 // draggables is an array-like object! Not a proper array object! Therefore, it
 // does not have the array's methods, but applying them works.
@@ -12,10 +13,12 @@ function makeDraggable (element) {
    */
 
   element.addEventListener('mousedown', (event) => {
+    element.classList.add('dragging');
     const move = mover(event);
     document.addEventListener('mousemove', move);
     document.addEventListener('mouseup', () => {
       document.removeEventListener('mousemove', move);
+      element.classList.remove('dragging');
     });
   });
 }
@@ -30,8 +33,58 @@ function mover (baseEvent) {
   const layerX = baseEvent.layerX;
   const layerY = baseEvent.layerY;
   const element = baseEvent.target;
+  const parentRect = element.parentElement.getBoundingClientRect();
   return function (event) {
-    element.style.top = (event.clientY - layerY) + 'px';
-    element.style.left = (event.clientX - layerX) + 'px';
+    element.style.top = (event.clientY - layerY - parentRect.top) + 'px';
+    element.style.left = (event.clientX - layerX - parentRect.left) + 'px';
   };
+}
+
+// .drop-stop-sensitive
+const dropStopSensitives = document.querySelectorAll('.drop-stop-sensitive');
+Array.prototype.forEach.call(dropStopSensitives, makeStopSensitive);
+
+function makeStopSensitive (element) {
+  const bound = bounder(element);
+  document.addEventListener('mouseup', bound);
+}
+
+function bounder (element) {
+  return function (event) {
+    if (element.classList.contains('dragging')) {
+      const dropStops = document.querySelectorAll('.drop-stop');
+      const availableDropStops = Array.prototype.filter.call(dropStops,
+        v => v.childElementCount === 0
+      );
+      Array.prototype.forEach.call(availableDropStops,
+        (dropStop) => {
+          const dropStopBoundaries = dropStop.getBoundingClientRect();
+
+          if (isXYInsideRect(event.clientX, event.clientY, dropStopBoundaries)) {
+            dropStop.appendChild(element);
+            element.style.top = '0px';
+            element.style.left = '0px';
+          }
+      });
+    }
+  };
+}
+
+function isXYInsideRect (x, y, rect) {
+  return y > rect.top && y < rect.bottom && x > rect.left && x < rect.right;
+}
+
+// .drop-stop-exclusive
+const dropStopExclusives = document.querySelectorAll('.drop-stop-exclusive');
+Array.prototype.forEach.call(dropStopExclusives, makeStopExclusive);
+
+function makeStopExclusive (element) {
+  const bound = bounder(element);
+  document.addEventListener('mouseup', (event) => {
+    bound(event);
+    if (element.classList.contains('dragging')) {
+      element.style.top = '0px';
+      element.style.left = '0px';
+    }
+  });
 }
