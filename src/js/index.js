@@ -4,15 +4,27 @@ const puzzleArea = gameBoard.querySelector('#puzzle-area');
 const puzzleResolved = gameBoard.querySelector('#puzzle-resolved');
 const puzzleSize = 3;
 
+const pieces = [...Array(puzzleSize * puzzleSize)].map((v, i) => {
+  const piece = document.createElement('div');
+  piece.classList.add('w30', 'h30');
+  piece.style.backgroundImage = 'url("media/octocat.jpg")';
+  piece.style.backgroundSize = '90px 90px';
+  piece.style.backgroundRepeat = 'no-repeat';
+  const row = Math.floor(i / puzzleSize);
+  const col = i % puzzleSize;
+  piece.style.backgroundPosition = (col * 50) + '% ' + (row * 50) + '%';
+  return piece;
+});
+
 Array.prototype.forEach.call(gameBoard.children, addDropStops);
 
 function addDropStops (element) {
   [...Array(puzzleSize)].forEach(() => {
     const d = document.createElement('div');
-    d.classList.add('row', 'db');
+    d.style.height = '30px';
     [...Array(puzzleSize)].forEach(() => {
       const dd = document.createElement('div');
-      dd.classList.add('drop-stop', 'b--dashed', 'w30', 'h30', 'dib', 'ma1');
+      dd.classList.add('drop-stop', 'w30', 'h30', 'dib');
       d.append(dd);
     });
     element.append(d);
@@ -45,12 +57,37 @@ function timer () {
 Array.prototype.forEach.call(
   document.querySelectorAll('#puzzle-resolved .drop-stop'),
   (v, i) => {
-    const piece = document.createElement('div');
-    piece.classList.add('w30', 'h30');
-    piece.style.backgroundImage =
-      'url("https://mir-s3-cdn-cf.behance.net/project_modules/max_1200/06b68438623767.577cbf5c96aa4.jpg") ';
-    piece.style.backgroundPosition =
-      (30 * (i % puzzleSize))+ 'px ' + (30 * Math.floor(i/puzzleSize))+ 'px';
-    v.append(piece);
+    v.append(pieces[i].cloneNode());
   }
 );
+
+function UISay () {
+  const messages = document.querySelector('#messages');
+  const msg = document.createElement('p');
+
+  Array.prototype.forEach.call(messages.children, (v, i) => {
+    v.style.opacity -= 0.34;
+    if (i > 1) {
+      messages.removeChild(v);
+    }
+  });
+  msg.innerText = Array.prototype.join.call(arguments, ' ');
+  msg.style.opacity = 1;
+  messages.insertBefore(msg, messages.children[0]);
+}
+
+UISay('hello', 'you');
+UISay('wow');
+UISay('messaging board!');
+UISay('messaging board!');
+UISay('messaging board!');
+UISay('messaging board!');
+UISay('messaging board!');
+UISay('messaging board!');
+
+let a = pieces;
+Array.prototype.forEach.call(document.querySelectorAll('#puzzle-pieces .drop-stop'), v => {
+  const n = Math.floor(Math.random() * a.length);
+  v.append(a[n].cloneNode());
+  a.splice(n, 1);
+});
