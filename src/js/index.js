@@ -1,4 +1,4 @@
-const size = 2;
+const size = 3;
 setUpPuzzlePicture('media/octocat.jpg');
 setUpPuzzleToolbox('media/octocat.jpg', size);
 setUpPuzzleBoard(size);
@@ -70,16 +70,16 @@ function UISay () {
 }
 
 function getPieces (imgURL, puzzleSize) {
-  const puzzlePictureRects = document.querySelector('#puzzle-picture').getClientRects()[0];
   return [...Array(Math.pow(puzzleSize, 2))].map((v, i) => {
     const piece = document.createElement('div');
     piece.classList.add('w-100', 'h-100', `piece-${i}`);
     piece.style.backgroundImage = `url("${imgURL}")`;
-    piece.style.backgroundSize = `${puzzlePictureRects.height}px ${puzzlePictureRects.width}px`; // TODO
+    piece.style.backgroundSize = `${100 * puzzleSize}% ${100 * puzzleSize}%`;
     piece.style.backgroundRepeat = 'no-repeat';
     const row = Math.floor(i / puzzleSize);
     const col = i % puzzleSize;
-    piece.style.backgroundPosition = `${col * 50}% ${row * 50}%`;
+    piece.style.backgroundPosition =
+      `${100 / (puzzleSize - 1) * col}% ${100 / (puzzleSize - 1) * row}%`;
 
     return piece;
   });
@@ -115,7 +115,7 @@ function setUpPuzzlePicture (imgURL) {
   const puzzlePicture = document.querySelector('#puzzle-picture');
 
   puzzlePicture.style.backgroundImage = `url("${imgURL}")`;
-  puzzlePicture.style.backgroundSize = '100% 100%'; // TODO
+  puzzlePicture.style.backgroundSize = '100% 100%';
   puzzlePicture.style.backgroundRepeat = 'no-repeat';
 }
 
@@ -128,7 +128,7 @@ function addDropAnchors (element, puzzleSize) {
     [...Array(puzzleSize)].forEach(() => {
       const dropAnchor = document.createElement('div');
       dropAnchor.classList.add('drop-anchor', 'h-100', 'fl', 'b--dashed');
-      dropAnchor.style.width = `calc(100% / ${puzzleSize})`
+      dropAnchor.style.width = `calc(100% / ${puzzleSize})`;
       row.append(dropAnchor);
     });
 
