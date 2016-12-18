@@ -1,7 +1,7 @@
-const size = 3;
+const size = 2;
+setUpPuzzlePicture('media/octocat.jpg');
 setUpPuzzleToolbox('media/octocat.jpg', size);
 setUpPuzzleBoard(size);
-setUpPuzzlePicture('media/octocat.jpg');
 actualizeScoreboard([4, 2, 9, 19, 5]);
 UISay('new message.');
 UISay('you', 'win!');
@@ -70,12 +70,12 @@ function UISay () {
 }
 
 function getPieces (imgURL, puzzleSize) {
+  const puzzlePictureRects = document.querySelector('#puzzle-picture').getClientRects()[0];
   return [...Array(Math.pow(puzzleSize, 2))].map((v, i) => {
     const piece = document.createElement('div');
     piece.classList.add('w-100', 'h-100', `piece-${i}`);
-
     piece.style.backgroundImage = `url("${imgURL}")`;
-    piece.style.backgroundSize = ''; // TODO
+    piece.style.backgroundSize = `${puzzlePictureRects.height}px ${puzzlePictureRects.width}px`; // TODO
     piece.style.backgroundRepeat = 'no-repeat';
     const row = Math.floor(i / puzzleSize);
     const col = i % puzzleSize;
@@ -122,11 +122,13 @@ function setUpPuzzlePicture (imgURL) {
 function addDropAnchors (element, puzzleSize) {
   [...Array(puzzleSize)].forEach(() => {
     const row = document.createElement('div');
-    row.classList.add('w-100', 'h-third');
+    row.classList.add('w-100');
+    row.style.height = `calc(100% / ${puzzleSize})`;
 
     [...Array(puzzleSize)].forEach(() => {
       const dropAnchor = document.createElement('div');
-      dropAnchor.classList.add('drop-anchor', 'w-third', 'h-100', 'fl', 'b--dashed');
+      dropAnchor.classList.add('drop-anchor', 'h-100', 'fl', 'b--dashed');
+      dropAnchor.style.width = `calc(100% / ${puzzleSize})`
       row.append(dropAnchor);
     });
 
@@ -134,12 +136,31 @@ function addDropAnchors (element, puzzleSize) {
   });
 }
 
-// TODO: Check pieces order for win condition
-// TODO: Add time to scores when win and reset it
+function checkCompleteness () {
+  return Array.prototype.every.call(
+    document.querySelectorAll('#puzzle-board .drop-anchor'),
+    (v, i) => Array.prototype.includes.call(v.children[0].classList, `piece-${i}`)
+  );
+}
+
+function resetBoard (imgURL, puzzleSize) {
+  resetPuzzleToolbox(imgURL, puzzleSize);
+  resetPuzzleBoard(puzzleSize);
+  setUpPuzzlePicture(imgURL, puzzleSize);
+}
+
+function resetPuzzleBoard (puzzleSize) {
+  removeAllChildren(document.querySelectorAll('#puzzle-board'));
+  setUpPuzzleBoard(puzzleSize);
+}
+
+function resetPuzzleToolbox (imgURL, puzzleSize) {
+  removeAllChildren(document.querySelectorAll('#puzzle-toolbox'));
+  setUpPuzzleToolbox(imgURL, puzzleSize);
+}
+
 // TODO: Doc
 // TODO: Styling
-// TODO: Difficulty
 // TODO: User choose difficulty
 // TODO: Add pictures
-// TODO: Reset puzzle board on win
 // TODO: Merge with dragndrop prototype
