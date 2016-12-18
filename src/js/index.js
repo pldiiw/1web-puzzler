@@ -1,69 +1,57 @@
-const gameBoard = document.querySelector('#game-board');
-const puzzlePieces = gameBoard.querySelector('#puzzle-pieces');
-const puzzleArea = gameBoard.querySelector('#puzzle-area');
-const puzzleResolved = gameBoard.querySelector('#puzzle-resolved');
-const puzzleSize = 3;
+const size = 3;
+setUpPuzzleToolbox('media/octocat.jpg', size);
+setUpPuzzleBoard(size);
+setUpPuzzlePicture('media/octocat.jpg');
+actualizeScoreboard([4, 2, 9, 19, 5]);
+UISay('new message.');
+UISay('you', 'win!');
+let t = timer();
+window.requestAnimationFrame(t.timer);
 
-const pieces = [...Array(puzzleSize * puzzleSize)].map((v, i) => {
-  const piece = document.createElement('div');
-  piece.classList.add('w30', 'h30');
-  piece.style.backgroundImage = 'url("media/octocat.jpg")';
-  piece.style.backgroundSize = '90px 90px';
-  piece.style.backgroundRepeat = 'no-repeat';
-  const row = Math.floor(i / puzzleSize);
-  const col = i % puzzleSize;
-  piece.style.backgroundPosition = (col * 50) + '% ' + (row * 50) + '%';
-  return piece;
-});
-
-Array.prototype.forEach.call(gameBoard.children, addDropStops);
-
-function addDropStops (element) {
-  [...Array(puzzleSize)].forEach(() => {
-    const d = document.createElement('div');
-    d.style.height = '30px';
-    [...Array(puzzleSize)].forEach(() => {
-      const dd = document.createElement('div');
-      dd.classList.add('drop-stop', 'w30', 'h30', 'dib');
-      d.append(dd);
+function actualizeScoreboard (scores) {
+  const scoreboardOl = document.querySelector('#scoreboard ol');
+  const topScores = scores
+    .sort((a, b) => a - b)
+    .slice(0, 3)
+    .map(v => {
+      const li = document.createElement('li');
+      li.innerText = v;
+      return li;
     });
-    element.append(d);
+
+  if (scoreboardOl.children.length > 0) { removeAllChildren(scoreboardOl); }
+  addChildren(scoreboardOl, topScores);
+}
+
+function removeAllChildren (element) {
+  Array.prototype.forEach.call(element.children, v => {
+    element.removeChild(v);
   });
 }
 
-const scoreboardOl = document.querySelector('#scoreboard ol');
-const scores = [10, 20, 5, 7, 30];
-const sortedScores = scores.sort((a, b) => a - b);
-const firstScores = sortedScores.slice(0, 3);
-firstScores.forEach(v => {
-  const li = document.createElement('li');
-  li.innerText = v;
-  scoreboardOl.append(li);
-});
-
-const chrono = document.querySelector('#chrono');
-let now = window.performance.now();
-let before = now;
-timer();
-
-function timer () {
-  before = now;
-  now = window.performance.now();
-  chrono.innerText = (now / 1000).toLocaleString('fr-FR',
-    { minimumFractionDigits: 2, maximumFractionDigits: 2 });
-  window.requestAnimationFrame(timer);
+function addChildren (element, children) {
+  Array.prototype.forEach.call(children, v => {
+    element.append(v);
+  });
 }
 
-Array.prototype.forEach.call(
-  document.querySelectorAll('#puzzle-resolved .drop-stop'),
-  (v, i) => {
-    v.append(pieces[i].cloneNode());
-  }
-);
+function timer () {
+  const chrono = document.querySelector('#chrono');
+  let lap = window.performance.now();
+  const _timer = () => {
+    chrono.innerText = ((window.performance.now() - lap) / 1000).toFixed(2);
+    window.requestAnimationFrame(_timer);
+  };
+  const _reset = () => {
+    const previousLap = lap;
+    lap = window.performance.now();
+    return lap - previousLap;
+  };
+  return { timer: _timer, reset: _reset };
+}
 
 function UISay () {
   const messages = document.querySelector('#messages');
-  const msg = document.createElement('p');
 
   Array.prototype.forEach.call(messages.children, (v, i) => {
     v.style.opacity -= 0.34;
@@ -71,23 +59,87 @@ function UISay () {
       messages.removeChild(v);
     }
   });
+
+  const msg = document.createElement('p');
   msg.innerText = Array.prototype.join.call(arguments, ' ');
   msg.style.opacity = 1;
+  msg.style.position = 'relative';
+  msg.style.animation = 'newMessage 0.8s';
+
   messages.insertBefore(msg, messages.children[0]);
 }
 
-UISay('hello', 'you');
-UISay('wow');
-UISay('messaging board!');
-UISay('messaging board!');
-UISay('messaging board!');
-UISay('messaging board!');
-UISay('messaging board!');
-UISay('messaging board!');
+function getPieces (imgURL, puzzleSize) {
+  return [...Array(Math.pow(puzzleSize, 2))].map((v, i) => {
+    const piece = document.createElement('div');
+    piece.classList.add('w-100', 'h-100', `piece-${i}`);
 
-let a = pieces;
-Array.prototype.forEach.call(document.querySelectorAll('#puzzle-pieces .drop-stop'), v => {
-  const n = Math.floor(Math.random() * a.length);
-  v.append(a[n].cloneNode());
-  a.splice(n, 1);
-});
+    piece.style.backgroundImage = `url("${imgURL}")`;
+    piece.style.backgroundSize = ''; // TODO
+    piece.style.backgroundRepeat = 'no-repeat';
+    const row = Math.floor(i / puzzleSize);
+    const col = i % puzzleSize;
+    piece.style.backgroundPosition = `${col * 50}% ${row * 50}%`;
+
+    return piece;
+  });
+}
+
+function shuffleArray (arr) {
+  if (arr.length > 0) {
+    const n = Math.floor(Math.random() * arr.length);
+    const elt = arr[n];
+    const remainder = arr.slice(0, n).concat(arr.slice(n + 1));
+    return [elt].concat(shuffleArray(remainder));
+  } else {
+    return [];
+  }
+}
+
+function setUpPuzzleToolbox (imgURL, puzzleSize) {
+  const puzzleToolbox = document.querySelector('#puzzle-toolbox');
+
+  addDropAnchors(puzzleToolbox, puzzleSize);
+
+  const shuffledPieces = shuffleArray(getPieces('media/octocat.jpg', puzzleSize));
+  const dropAnchors = puzzleToolbox.querySelectorAll('.drop-anchor');
+  Array.prototype.forEach.call(dropAnchors, (v, i) => v.append(shuffledPieces[i]));
+}
+
+function setUpPuzzleBoard (puzzleSize) {
+  const puzzleBoard = document.querySelector('#puzzle-board');
+  addDropAnchors(puzzleBoard, puzzleSize);
+}
+
+function setUpPuzzlePicture (imgURL) {
+  const puzzlePicture = document.querySelector('#puzzle-picture');
+
+  puzzlePicture.style.backgroundImage = `url("${imgURL}")`;
+  puzzlePicture.style.backgroundSize = '100% 100%'; // TODO
+  puzzlePicture.style.backgroundRepeat = 'no-repeat';
+}
+
+function addDropAnchors (element, puzzleSize) {
+  [...Array(puzzleSize)].forEach(() => {
+    const row = document.createElement('div');
+    row.classList.add('w-100', 'h-third');
+
+    [...Array(puzzleSize)].forEach(() => {
+      const dropAnchor = document.createElement('div');
+      dropAnchor.classList.add('drop-anchor', 'w-third', 'h-100', 'fl', 'b--dashed');
+      row.append(dropAnchor);
+    });
+
+    element.append(row);
+  });
+}
+
+// TODO: Check pieces order for win condition
+// TODO: Add time to scores when win and reset it
+// TODO: Doc
+// TODO: Styling
+// TODO: Difficulty
+// TODO: User choose difficulty
+// TODO: Add pictures
+// TODO: Reset puzzle board on win
+// TODO: Merge with dragndrop prototype
