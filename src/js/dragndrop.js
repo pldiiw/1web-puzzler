@@ -1,6 +1,6 @@
 'use strict';
 
-function setUpDraggables (inside) {
+function setUpDraggables () {
   const draggables = document.querySelectorAll('.draggable');
   Array.prototype.forEach.call(draggables, makeDraggable);
   const dropAnchorSensitives = document.querySelectorAll('.draggable--drop-anchor-sensitive');

@@ -4,7 +4,7 @@ const size = 3;
 setUpPuzzlePicture('media/octocat.jpg');
 setUpPuzzleToolbox('media/octocat.jpg', size);
 setUpPuzzleBoard(size);
-setUpDraggables('.game-board');
+setUpDraggables();
 actualizeScoreboard([4, 2, 9, 19, 5]);
 UISay('new message.');
 UISay('you', 'win!');
