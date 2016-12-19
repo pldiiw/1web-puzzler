@@ -1,32 +1,11 @@
-.w50 {
-  width: 50px;
-}
+.h50 { height: 50px; }
+.w50 { width: 50px; }
 
-.h50 {
-  height: 50px;
-}
+.b--dashed { border-style: dashed; }
 
-.bg-red {
-  background-color: red;
-}
+.bg-red { background-color: red; }
 
-.pos-a {
-  position: absolute;
-}
+.dib { display: inline-block; }
 
-.ba {
-  border-style: solid;
-  border-width: 1px;
-}
-
-.b--dashed {
-  border-style: dashed;
-}
-
-.pos-r {
-  position: relative;
-}
-
-.dib {
-  display: inline-block;
-}
+.absolute { position: absolute; }
+.relative { position: relative; }

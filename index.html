@@ -7,15 +7,18 @@
   <link rel="stylesheet" href="index.css">
 </head>
 <body>
-  <div class="drop-anchor w50 h50 ba b--dashed">
-    <div class="draggable draggable--drop-anchor-exclusive bg-red w50 h50 pos-r"></div>
+  <div class="drop-anchor w50 h50 b--dashed">
+    <div class="draggable draggable--drop-anchor-exclusive bg-red w50 h50 relative"></div>
   </div>
-  <div class="drop-anchor w50 h50 ba b--dashed dib">
+  <div class="drop-anchor w50 h50 b--dashed"></div>
+  <div class="drop-anchor w50 h50 b--dashed">
+    <div class="draggable draggable--drop-anchor-sensitive bg-red w50 h50 relative"></div>
   </div>
-  <div class="drop-anchor w50 h50 ba b--dashed">
-    <div class="draggable draggable--drop-anchor-sensitive bg-red w50 h50 pos-r"></div>
+  <div class="drop-anchor drop-anchor--max-elements-2 w50 h50 b--dashed"></div>
+  <div class="drop-anchor drop-anchor--swap-last-element w50 h50 b--dashed"></div>
+  <div class="drop-anchor w50 h50 b--dashed">
+    <div class="draggable bg-red w50 h50 relative"></div>
   </div>
-  <div class="drop-anchor drop-anchor--max-elements-1 w50 h50 ba b--dashed dib"></div>
 
   <script src="index.js"></script>
 </body>

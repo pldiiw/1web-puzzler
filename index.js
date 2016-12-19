@@ -1,35 +1,27 @@
 'use strict';
 
-// .draggable
 const draggables = document.querySelectorAll('.draggable');
-// draggables is an array-like object! Not a proper array object! Therefore, it
-// does not have the array's methods, but applying them works.
 Array.prototype.forEach.call(draggables, makeDraggable);
 
-function makeDraggable (element) {
-  /* Add necesseray eventListeners to make element draggable.
-   * Basically, on mousedown, any mouse mouvement is captured and the element
-   * is moved to the mouse position until mouseup happens.
-   */
+const dropAnchorSensitives = document.querySelectorAll('.draggable--drop-anchor-sensitive');
+Array.prototype.forEach.call(dropAnchorSensitives, makeAnchorSensitive);
 
+const dropAnchorExclusives = document.querySelectorAll('.draggable--drop-anchor-exclusive');
+Array.prototype.forEach.call(dropAnchorExclusives, makeAnchorExclusive);
+
+function makeDraggable (element) {
   element.addEventListener('mousedown', (event) => {
     element.classList.add('dragging');
-    const move = mover(event);
-    document.addEventListener('mousemove', move);
+    const drag = dragger(event);
+    document.addEventListener('mousemove', drag);
     document.addEventListener('mouseup', () => {
-      document.removeEventListener('mousemove', move);
+      document.removeEventListener('mousemove', drag);
       element.classList.remove('dragging');
     });
   });
 }
 
-function mover (baseEvent) {
-  /* Higher order function that returns an eventListener function to be used to
-   * move baseEvent.target where the mouse pointer is located.
-   * layerX and layerY are used to keep the pointer where it was when the
-   * baseEvent was triggered relative to the baseEvent.target's origin.
-   */
-
+function dragger (baseEvent) {
   const layerX = baseEvent.layerX;
   const layerY = baseEvent.layerY;
   const element = baseEvent.target;
@@ -40,27 +32,23 @@ function mover (baseEvent) {
   };
 }
 
-// .draggable--drop-anchor-sensitive
-const dropAnchorSensitives = document.querySelectorAll('.draggable--drop-anchor-sensitive');
-Array.prototype.forEach.call(dropAnchorSensitives, makeAnchorSensitive);
-
 function makeAnchorSensitive (element) {
-  const bound = bounder(element);
-  document.addEventListener('mouseup', bound);
+  const sensitive = sensitivizer(element);
+  document.addEventListener('mouseup', sensitive);
 }
 
-function bounder (element) {
+function sensitivizer (element) {
   return function (event) {
     if (element.classList.contains('dragging')) {
       const dropAnchors = document.querySelectorAll('.drop-anchor');
-      const availableDropAnchors = Array.prototype.filter.call(dropAnchors,
-        v => v.childElementCount === 0
+      const availableDropAnchors = Array.prototype.filter.call(
+        dropAnchors,
+        v => v.childElementCount < getMaxElements(v)
       );
       Array.prototype.forEach.call(availableDropAnchors,
         (dropAnchor) => {
           const dropAnchorBoundaries = dropAnchor.getBoundingClientRect();
-
-          if (isXYInsideRect(event.clientX, event.clientY, dropAnchorBoundaries)) {
+          if (areXYInsideRect(event.clientX, event.clientY, dropAnchorBoundaries)) {
             dropAnchor.appendChild(element);
             element.style.top = '0px';
             element.style.left = '0px';
@@ -70,21 +58,30 @@ function bounder (element) {
   };
 }
 
-function isXYInsideRect (x, y, rect) {
+function areXYInsideRect (x, y, rect) {
   return y > rect.top && y < rect.bottom && x > rect.left && x < rect.right;
 }
 
-// .draggable--drop-anchor-exclusive
-const dropAnchorExclusives = document.querySelectorAll('.draggable--drop-anchor-exclusive');
-Array.prototype.forEach.call(dropAnchorExclusives, makeAnchorExclusive);
+function getMaxElements (element) {
+  const maxElementsClass = Array.prototype.reduce.call(element.classList,
+    (a, v) => /drop-anchor--max-elements-[0-9]+/.test(v) ? v : a,
+    'drop-anchor--max-elements-1');
+  return parseInt(maxElementsClass.slice(26));
+}
+
 
 function makeAnchorExclusive (element) {
-  const bound = bounder(element);
-  document.addEventListener('mouseup', (event) => {
-    bound(event);
-    if (element.classList.contains('dragging')) {
-      element.style.top = '0px';
-      element.style.left = '0px';
-    }
-  });
+  if (!element.classList.contains('draggable--drop-anchor-sensitive')) {
+    const sensitive = sensitivizer(element);
+    document.addEventListener('mouseup', (event) => {
+      sensitive(event);
+      if (element.classList.contains('dragging')) {
+        element.style.top = '0px';
+        element.style.left = '0px';
+      }
+    });
+  } else {
+    console.warn('Warning: A draggable is both sensitive and exclusive to drop',
+                 'anchors! Sensitiveness has priority over exclusiveness.');
+  }
 }
