@@ -1,7 +1,10 @@
+'use strict';
+
 const size = 3;
 setUpPuzzlePicture('media/octocat.jpg');
 setUpPuzzleToolbox('media/octocat.jpg', size);
 setUpPuzzleBoard(size);
+setUpDraggables('.game-board');
 actualizeScoreboard([4, 2, 9, 19, 5]);
 UISay('new message.');
 UISay('you', 'win!');
@@ -72,7 +75,8 @@ function UISay () {
 function getPieces (imgURL, puzzleSize) {
   return [...Array(Math.pow(puzzleSize, 2))].map((v, i) => {
     const piece = document.createElement('div');
-    piece.classList.add('w-100', 'h-100', `piece-${i}`);
+    piece.classList.add('w-100', 'h-100', 'draggable',
+      'draggable--drop-anchor-exclusive', 'relative', `piece-${i}`);
     piece.style.backgroundImage = `url("${imgURL}")`;
     piece.style.backgroundSize = `${100 * puzzleSize}% ${100 * puzzleSize}%`;
     piece.style.backgroundRepeat = 'no-repeat';
@@ -127,8 +131,7 @@ function addDropAnchors (element, puzzleSize) {
 
     [...Array(puzzleSize)].forEach(() => {
       const dropAnchor = document.createElement('div');
-      dropAnchor.classList.add('drop-anchor', 'h-100', 'fl', 'ba',
-                               'b--black-60', 'bw1');
+      dropAnchor.classList.add('drop-anchor', 'h-100', 'fl', 'ba', 'b--black-50', 'bw1');
       dropAnchor.style.width = `calc(100% / ${puzzleSize})`;
       row.append(dropAnchor);
     });
