@@ -1,15 +1,25 @@
 'use strict';
 
-const size = 3;
+const size = 1;
 setUpPuzzlePicture('media/octocat.jpg');
 setUpPuzzleToolbox('media/octocat.jpg', size);
 setUpPuzzleBoard(size);
 setUpDraggables();
-actualizeScoreboard([4, 2, 9, 19, 5]);
-UISay('new message.');
-UISay('you', 'win!');
+let scores = [5, 6, 8, 15];
+actualizeScoreboard(scores);
 let t = timer();
 window.requestAnimationFrame(t.timer);
+document.addEventListener('dropping', () => {
+  if (checkCompleteness()) {
+    const ti = t.reset();
+    scores = scores.concat([ti]);
+    actualizeScoreboard(scores);
+    UISay('Yeah! You completed the puzzle in ' + ti + ' seconds!');
+    resetBoard('media/octocat.jpg', size);
+    setUpDraggables();
+    t.reset();
+  }
+})
 
 function actualizeScoreboard (scores) {
   const scoreboardOl = document.querySelector('#scoreboard ol');
@@ -27,8 +37,8 @@ function actualizeScoreboard (scores) {
 }
 
 function removeAllChildren (element) {
-  Array.prototype.forEach.call(element.children, v => {
-    element.removeChild(v);
+  [...Array(element.children.length)].forEach(v => {
+    element.removeChild(element.children[0]);
   });
 }
 
@@ -48,7 +58,7 @@ function timer () {
   const _reset = () => {
     const previousLap = lap;
     lap = window.performance.now();
-    return lap - previousLap;
+    return ((lap - previousLap) / 1000).toFixed(2);
   };
   return { timer: _timer, reset: _reset };
 }
@@ -154,16 +164,15 @@ function resetBoard (imgURL, puzzleSize) {
 }
 
 function resetPuzzleBoard (puzzleSize) {
-  removeAllChildren(document.querySelectorAll('#puzzle-board'));
+  removeAllChildren(document.querySelector('#puzzle-board'));
   setUpPuzzleBoard(puzzleSize);
 }
 
 function resetPuzzleToolbox (imgURL, puzzleSize) {
-  removeAllChildren(document.querySelectorAll('#puzzle-toolbox'));
+  removeAllChildren(document.querySelector('#puzzle-toolbox'));
   setUpPuzzleToolbox(imgURL, puzzleSize);
 }
 
 // TODO: Doc
 // TODO: User choose difficulty
 // TODO: Add pictures
-// TODO: Merge with dragndrop prototype

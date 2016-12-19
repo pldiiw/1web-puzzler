@@ -1,4 +1,5 @@
 'use strict';
+const droppingEvent = new CustomEvent("dropping");
 
 function setUpDraggables () {
   const draggables = document.querySelectorAll('.draggable');
@@ -21,6 +22,7 @@ function makeDraggable (element) {
       document.removeEventListener('mousemove', drag);
       element.classList.remove('dragging');
       element.style.zIndex = '999';
+      document.dispatchEvent(droppingEvent);
     });
   });
 }
