@@ -32,6 +32,12 @@ this is js syntax we didn't see in class.
 
 I used the [semistandard][sms] coding style for the JavaScript.
 
+### Git
+
+Git was used for this project, and is hosted on GitHub at
+https://github.com/pldiiw/1web-puzzler
+.
+
 ## LICENSE
 
 This repo is under the Unlicense. See LICENSE file for more information.  
