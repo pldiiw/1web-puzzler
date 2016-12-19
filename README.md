@@ -22,7 +22,7 @@ implement didn't make it but the idea is here. An example of the things I didn't
 have time to add is the `drop-anchor--swap-elements` class that swap two
 elements when a draggable want to tie to an already full drop anchor.
 
-### `(...) => {...}` ? `[...Array]` ?? let/const ???
+### `(...) => {...}` ? `[...Array]` ?? `let`/`const` ???
 
 Some _experimental_ js features presented in the last ECMAScript specifications
 were used. I didn't have time to downgrade all the syntax to es5. I point it as
