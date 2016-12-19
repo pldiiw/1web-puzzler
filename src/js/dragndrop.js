@@ -1,7 +1,7 @@
 'use strict';
 
 // Custom event that will be called everytime a draggable is dropped
-const droppingEvent = new CustomEvent("dropping");
+const droppingEvent = new CustomEvent('dropping');
 
 /**
  * Take every element that have a class recognized by the script and apply
@@ -36,7 +36,7 @@ function setUpDraggables () {
   Array.prototype.forEach.call(dropAnchorSensitives, makeAnchorSensitive);
   const dropAnchorExclusives = document.querySelectorAll('.draggable--drop-anchor-exclusive');
   Array.prototype.forEach.call(dropAnchorExclusives, makeAnchorExclusive);
-  Array.prototype.forEach.call(document.querySelectorAll('.drop-anchor'), v => v.style.zIndex = '998');
+  Array.prototype.forEach.call(document.querySelectorAll('.drop-anchor'), v => { v.style.zIndex = '998'; });
 }
 
 /**
@@ -106,7 +106,8 @@ function sensitivizer (element) {
             element.style.top = '0px';
             element.style.left = '0px';
           }
-      });
+        }
+      );
     }
   };
 }

@@ -113,7 +113,7 @@ function setUpWinCondition (puzzleSize, timer) {
       // New round!
       resetBoard(pickRandomArrayElt(pictures), puzzleSize, timer);
     }
-  })
+  });
 }
 
 /**
@@ -312,7 +312,7 @@ function checkCompleteness () {
   return Array.prototype.every.call(
     document.querySelectorAll('#puzzle-board .drop-anchor'),
     (v, i) => {
-      return v.children != undefined
+      return v.children.length > 0
         ? Array.prototype.includes.call(v.children[0].classList, `piece-${i}`)
         : false;
     }
