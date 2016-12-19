@@ -4,7 +4,7 @@ const pictures = [
   'media/octocat.jpg',
   'media/roses.jpg',
   'media/futura.jpg',
-  'media/hongkong1.jpg'
+  'media/hongkong.jpg'
 ];
 let timer = launchTimer();
 
