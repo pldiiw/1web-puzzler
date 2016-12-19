@@ -1,7 +1,13 @@
 'use strict';
 
-const pictures = ['media/octocat.jpg'];
+const pictures = [
+  'media/octocat.jpg',
+  'media/roses.jpg',
+  'media/futura.jpg',
+  'media/hongkong1.jpg'
+];
 let timer = launchTimer();
+
 const difficultySelectionMenu = document.querySelector('#difficulty-selection-menu');
 const difficultyChoices = document.querySelectorAll('#difficulty-selection-menu div div');
 Array.prototype.forEach.call(difficultyChoices, (v, i) => {
@@ -159,7 +165,7 @@ function setUpPuzzleToolbox (imgURL, puzzleSize) {
 
   addDropAnchors(puzzleToolbox, puzzleSize);
 
-  const shuffledPieces = shuffleArray(getPieces('media/octocat.jpg', puzzleSize));
+  const shuffledPieces = shuffleArray(getPieces(imgURL, puzzleSize));
   const dropAnchors = puzzleToolbox.querySelectorAll('.drop-anchor');
   Array.prototype.forEach.call(dropAnchors, (v, i) => v.append(shuffledPieces[i]));
 }
@@ -220,4 +226,3 @@ function resetPuzzleToolbox (imgURL, puzzleSize) {
 
 // TODO: Doc
 // TODO: User choose difficulty
-// TODO: Add pictures
