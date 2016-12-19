@@ -5,8 +5,12 @@ html, body {
 }
 * { color: rgba(0, 0, 0, 0.7); }
 div, input { box-sizing: border-box; }
+#difficulty-selection-menu { z-index: 1001; }
 
 .tc { text-align: center; }
+
+.white-80 { color: rgba(255, 255, 255, 0.8); }
+.bg-dark-pink { background-color: #d5008f; }
 
 .w1 { width: 1rem; }
 .w2 { width: 2rem; }
@@ -176,7 +180,7 @@ div, input { box-sizing: border-box; }
 
 .bg-washed-blue { background-color: #f6fffe; }
 .feared-grey { color: #b2afa1; }
-.bg--black-40 { background-color: rgba(0, 0, 0, 0.4); }
+.bg--black-80 { background-color: rgba(0, 0, 0, 0.8); }
 .bg-blue { background-color: #357edd; }
 .bg-green { background-color: #19a974; }
 .bg-red { background-color: #ff4136; }
@@ -202,4 +206,9 @@ div, input { box-sizing: border-box; }
 @keyframes newMessage {
   from { top: -20px; color: #FFF; }
   to { top: 0; color: #000; }
+}
+
+@keyframes slideUp {
+  from { bottom: 0; }
+  to { bottom: 200%; }
 }

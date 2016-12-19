@@ -1,25 +1,69 @@
 'use strict';
 
-const size = 1;
-setUpPuzzlePicture('media/octocat.jpg');
-setUpPuzzleToolbox('media/octocat.jpg', size);
-setUpPuzzleBoard(size);
-setUpDraggables();
-let scores = [5, 6, 8, 15];
-actualizeScoreboard(scores);
-let t = timer();
-window.requestAnimationFrame(t.timer);
-document.addEventListener('dropping', () => {
-  if (checkCompleteness()) {
-    const ti = t.reset();
-    scores = scores.concat([ti]);
-    actualizeScoreboard(scores);
-    UISay('Yeah! You completed the puzzle in ' + ti + ' seconds!');
-    resetBoard('media/octocat.jpg', size);
-    setUpDraggables();
-    t.reset();
+const pictures = ['media/octocat.jpg'];
+let timer = launchTimer();
+const difficultySelectionMenu = document.querySelector('#difficulty-selection-menu');
+const difficultyChoices = document.querySelectorAll('#difficulty-selection-menu div div');
+Array.prototype.forEach.call(difficultyChoices, (v, i) => {
+  if (i < 3) {
+    v.addEventListener('click', () => {
+      difficultySelectionMenu.style.animation = 'slideUp 0.8s ease-in-out forwards';
+      const choice = parseInt(v.attributes.value.value);
+      initializeGame(pickRandomArrayElt(pictures), choice, timer);
+    });
+  } else {
+    v.querySelector('p').addEventListener('click', () => {
+      difficultySelectionMenu.style.animation = 'slideUp 0.8s ease-in-out forwards';
+      initializeGame(
+        pickRandomArrayElt(pictures),
+        parseInt(v.querySelector('input[name="custom-difficulty"]').value),
+        timer
+      );
+    });
   }
-})
+});
+
+function pickRandomArrayElt (arr) {
+  return arr[Math.floor(Math.random() * arr.length)];
+}
+
+function initializeGame (picture, puzzleSize, timer) {
+  setUpGameBoard(picture, puzzleSize, timer);
+  timer.reset();
+}
+
+function setUpGameBoard (picture, puzzleSize, timer) {
+  setUpPuzzlePicture(picture);
+  setUpPuzzleToolbox(picture, puzzleSize);
+  setUpPuzzleBoard(puzzleSize);
+  setUpDraggables();
+  setUpWinCondition(puzzleSize, timer);
+}
+
+function launchTimer () {
+  let timer = Timer();
+  window.requestAnimationFrame(timer.timer);
+  return timer;
+}
+
+function setUpWinCondition (puzzleSize, timer) {
+  document.addEventListener('dropping', () => {
+    if (checkCompleteness()) {
+      const userTime = timer.reset();
+      UISay(`Yeah! You completed the puzzle in ${userTime} seconds!`);
+
+      const scores = [userTime].concat(
+        Array.prototype.reduce.call(
+          document.querySelectorAll('#scoreboard ol li'),
+          (a, v) => a.concat([v.innerText]),
+          []
+        )
+      );
+      actualizeScoreboard(scores);
+      resetBoard(pickRandomArrayElt(pictures), puzzleSize, timer);
+    }
+  })
+}
 
 function actualizeScoreboard (scores) {
   const scoreboardOl = document.querySelector('#scoreboard ol');
@@ -48,7 +92,7 @@ function addChildren (element, children) {
   });
 }
 
-function timer () {
+function Timer () {
   const chrono = document.querySelector('#chrono p');
   let lap = window.performance.now();
   const _timer = () => {
@@ -161,6 +205,7 @@ function resetBoard (imgURL, puzzleSize) {
   resetPuzzleToolbox(imgURL, puzzleSize);
   resetPuzzleBoard(puzzleSize);
   setUpPuzzlePicture(imgURL, puzzleSize);
+  setUpDraggables();
 }
 
 function resetPuzzleBoard (puzzleSize) {
