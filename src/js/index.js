@@ -36,7 +36,7 @@ function addChildren (element, children) {
 }
 
 function timer () {
-  const chrono = document.querySelector('#chrono');
+  const chrono = document.querySelector('#chrono p');
   let lap = window.performance.now();
   const _timer = () => {
     chrono.innerText = ((window.performance.now() - lap) / 1000).toFixed(2);
@@ -127,7 +127,8 @@ function addDropAnchors (element, puzzleSize) {
 
     [...Array(puzzleSize)].forEach(() => {
       const dropAnchor = document.createElement('div');
-      dropAnchor.classList.add('drop-anchor', 'h-100', 'fl', 'b--dashed');
+      dropAnchor.classList.add('drop-anchor', 'h-100', 'fl', 'ba',
+                               'b--black-60', 'bw1');
       dropAnchor.style.width = `calc(100% / ${puzzleSize})`;
       row.append(dropAnchor);
     });
@@ -160,7 +161,6 @@ function resetPuzzleToolbox (imgURL, puzzleSize) {
 }
 
 // TODO: Doc
-// TODO: Styling
 // TODO: User choose difficulty
 // TODO: Add pictures
 // TODO: Merge with dragndrop prototype

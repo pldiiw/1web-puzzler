@@ -6,19 +6,29 @@
   <link rel="stylesheet" href="css/index.css" />
 </head>
 <body>
-  <h1 class="tc tracked-mega f1 h-10">Puzzler</h1>
-  <div id="game-board" class="b--dashed w-100 h-50">
-    <div id="puzzle-toolbox" class="b--dashed fl w-third h-100"></div>
-    <div id="puzzle-board" class="b--dashed fl w-third h-100"></div>
-    <div id="puzzle-picture" class="b--dashed fl w-third h-100"></div>
-  </div>
-  <div id="game-info" class="b--dashed w-100 h-40">
-    <div id="scoreboard" class="b--dashed fl w-third">
-      <h2 class="tc">Scoreboard</h2>
-      <ol></ol>
+  <div id="difficulty-selection-menu" class="w-100 h-100 bg--black-40 fixed">
+    <div class="tc center f3">
+      <p>How large do you want your puzzles?</p>
+      <div class="dib grow bg-green pa4 f2" value="3"><p>3x3</p></div>
+      <div class="dib grow bg-blue pa4 f2" value="4"><p>4x4</p></div>
+      <div class="dib grow bg-red pa4 f2" value="5"><p>5x5</p></div>
+      <div class="dib grow" value="-1"><input type="number" min="1"
+        name="custom-difficulty" class="w4 h4 f2"></input></div>
     </div>
-    <div id="messages" class="b--dashed fl w-third tc"></div>
-    <div id="chrono" class="b--dashed fl w-third tc"></div>
+  </div>
+  <h1 class="tc tracked-mega f-5 pv4 ma0">Puzzler</h1>
+  <div id="game-board" class="w-100 h-50">
+    <div id="puzzle-toolbox" class="fl w-third h-100 ph3"></div>
+    <div id="puzzle-board" class="fl w-third h-100 ph3"></div>
+    <div id="puzzle-picture" class="fl w-third h-100 ph3"></div>
+  </div>
+  <div id="game-info" class="w-100">
+    <div id="scoreboard" class="ph4 fl w-third pv5 tracked">
+      <h2 class="tc f3">Scoreboard</h2>
+      <ol class="f4 pv4"></ol>
+    </div>
+    <div id="messages" class="fl w-third tc pv5 f3"></div>
+    <div id="chrono" class="fl w-third tc f2 pv5"><p>0.00</p></div>
   </div>
 
   <script src="js/index.js"></script>
